@@ -1,0 +1,45 @@
+{
+  "name": "tailwind-alpine-web-extension",
+  "version": "1.0.0",
+  "scripts": {
+    "watch:tailwind": "NODE_ENV=development postcss src/tailwind.css -o extension/dist/tailwind.dist.css -w",
+    "dev:tailwind": "NODE_ENV=development postcss src/tailwind.css -o extension/dist/tailwind.dist.css",
+    "build:tailwind": "NODE_ENV=production postcss src/tailwind.css -o extension/dist/tailwind.dist.css",
+    "dev": "concurrently \"npm run watch:tailwind\" \"NODE_ENV=development webpack --config webpack.config.js --mode=development --watch\"",
+    "build": "npm run build:tailwind && webpack --mode production"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.4",
+    "alpinejs": "^1.9.5",
+    "autoprefixer": "^9.7.4",
+    "babel-loader": "^8.1.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "concurrently": "^5.1.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "cross-env": "^7.0.0",
+    "css-loader": "^3.4.2",
+    "postcss-cli": "^7.1.0",
+    "postcss-loader": "^3.0.0",
+    "tailwindcss": "^1.2.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-extension-reloader": "^1.1.4"
+  },
+  "dependencies": {
+    "moment": "^2.24.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^4.0.0",
+    "react-transition-group": "^4.3.0",
+    "redux": "^3.0.4",
+    "reselect": "^4.0.0",
+    "style-loader": "^1.1.3",
+    "webext-redux": "^2.1.2"
+  },
+  "resolutions": {
+    "graceful-fs": "4.2.3"
+  }
+}

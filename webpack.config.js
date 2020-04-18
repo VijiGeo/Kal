@@ -35,8 +35,8 @@ let ExtensionConfig = Object.assign({}, config, {
         use: ['babel-loader']
       },
       {
-        test: /\.(css|less)$/,
-        use: ["style-loader", "css-loader"]
+        test: /\.(css|less|pcss)$/,
+        use: ["style-loader", "css-loader", { loader: "postcss-loader", options: { plugins: [require("tailwindcss"), require["autoprefixer"]] } }]
       }
     ]
   },

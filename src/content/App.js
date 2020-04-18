@@ -1,35 +1,39 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from "./components/Modal"
-
-export const getAllTabs = () => new Promise((resolve) => {
-  chrome.tabs.query({
-  }, (tabs) => {
-    resolve(tabs);
-  })
-})
+import {
+  allTabsSelector, searchFilteredTabsSelector
+} from './selectors/data';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     thisTab: {}
+  //   }
+  // }
 
-  componentDidMount() {
-    // document.addEventListener('click', () => {
-    //   this.props.dispatch({
-    //     type: 'ADD_COUNT'
-    //   });
-    // });
-  }
+  componentDidMount() { }
 
   render() {
-    const { isPanelToggled, tabs } = this.props
-    console.log("PANEL", isPanelToggled)
-    console.log("TABS", tabs)
+    const { isPanelToggled, tabs, currentTab } = this.props
 
+    // chrome.runtime.sendMessage({ type: "tabId" }, (response) => {
+    //   this.setState(prevState => ({
+    //     thisTab: response.data.id
+    //   }))
+    // })
+    // 
+    // const modalOpen = isPanelToggled && currentTab.items.id === thisTab
+
+    // console.log("CURRENT TAB", currentTab)
+
+    const modalOpen = isPanelToggled && currentTab
+    // console.log("CURRENT TAB", currentTab)
+    // console.log("IS MODAL OPEN", modalOpen)
+    // console.log("ALL TABS", tabs)
     return (
-      // <div>Test</div>
-      <Modal isOpen={isPanelToggled} tabs={tabs} />
+      <Modal isOpen={modalOpen} tabs={tabs} />
     );
   }
 }
@@ -37,8 +41,10 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     isPanelToggled: state.controller.commandPanelToggled,
-    tabs: state.data.currentTabs.items
+    tabs: searchFilteredTabsSelector(state),
+    currentTab: state.data.currentTab
   };
 };
 
 export default connect(mapStateToProps)(App);
+

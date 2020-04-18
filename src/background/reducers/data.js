@@ -1,14 +1,20 @@
 import {
   SET_HISTORY_SUCCEEDED,
-  SET_CURRENT_TABS_SUCCEEDED,
+  SET_ALL_TABS_SUCCEEDED,
+  SET_CURRENT_TAB_SUCCEEDED,
   SET_RECENTLY_CLOSED_SUCCEEDED,
   SET_TOP_SITES_SUCCEEDED,
-  SET_APP_GROUPS_SUCCEEDED
+  // SET_APP_GROUPS_SUCCEEDED
 } from '../actions/data';
 
 const initialState = {
-  currentTabs: {
+  allTabs: {
     items: [],
+    fetching: false,
+    error: null
+  },
+  currentTab: {
+    item: {},
     fetching: false,
     error: null
   },
@@ -27,11 +33,11 @@ const initialState = {
     fetching: false,
     error: null
   },
-  appGroups: {
-    items: [],
-    fetching: false,
-    error: null
-  }
+  // appGroups: {
+  //   items: [],
+  //   fetching: false,
+  //   error: null
+  // }
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -45,10 +51,19 @@ export const dataReducer = (state = initialState, action) => {
           error: null
         }
       };
-    case SET_CURRENT_TABS_SUCCEEDED:
+    case SET_ALL_TABS_SUCCEEDED:
       return {
         ...state,
-        currentTabs: {
+        allTabs: {
+          items: action.payload,
+          fetching: false,
+          error: null
+        }
+      };
+    case SET_CURRENT_TAB_SUCCEEDED:
+      return {
+        ...state,
+        currentTab: {
           items: action.payload,
           fetching: false,
           error: null
@@ -72,15 +87,15 @@ export const dataReducer = (state = initialState, action) => {
           error: null
         }
       };
-    case SET_APP_GROUPS_SUCCEEDED:
-      return {
-        ...state,
-        appGroups: {
-          items: action.payload,
-          fetching: false,
-          error: null
-        }
-      };
+    // case SET_APP_GROUPS_SUCCEEDED:
+    //   return {
+    //     ...state,
+    //     appGroups: {
+    //       items: action.payload,
+    //       fetching: false,
+    //       error: null
+    //     }
+    //   };
     default:
       return state;
   }

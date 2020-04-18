@@ -9,6 +9,9 @@
   {
     "id": 101,
     "title": "Google Docs",
+    "pseudo_title": [
+      "GDocs"
+    ],
     "urls": [
       "https://docs.google.com/document"
     ]
@@ -16,6 +19,9 @@
   {
     "id": 102,
     "title": "Google Calendar",
+    "pseudo_title": [
+      "GCal"
+    ],
     "urls": [
       "https://calendar.google.com/calendar"
     ]
@@ -23,6 +29,9 @@
   {
     "id": 103,
     "title": "Google Sheets",
+    "pseudo_title": [
+      "GSheets"
+    ],
     "urls": [
       "https://docs.google.com/spreadsheets"
     ]
@@ -38,6 +47,9 @@
   {
     "id": 105,
     "title": "Google Analytics",
+    "pseudo_title": [
+      "GA"
+    ],
     "urls": [
       "https://analytics.google.com"
     ]
@@ -45,6 +57,9 @@
   {
     "id": 106,
     "title": "Google Chrome",
+    "pseudo_title": [
+      "Chrome"
+    ],
     "urls": [
       "https://developer.chrome.com"
     ]
@@ -59,7 +74,10 @@
   },
   {
     "id": 108,
-    "title": "FB Messenger",
+    "title": "Facebook Messenger",
+    "pseudo_title": [
+      "Messenger, FB Messenger"
+    ],
     "urls": [
       "https://www.messenger.com",
       "https://messenger.com"
@@ -76,6 +94,10 @@
   {
     "id": 110,
     "title": "Instagram",
+    "pseudo_title": [
+      "Insta",
+      "IG"
+    ],
     "urls": [
       "https://www.instagram.com",
       "https://instagram.com"
@@ -92,6 +114,9 @@
   {
     "id": 112,
     "title": "Facebook",
+    "pseudo_title": [
+      "FB"
+    ],
     "urls": [
       "https://www.facebook.com",
       "https://facebook.com"
@@ -132,6 +157,9 @@
   {
     "id": 117,
     "title": "Zoom Video",
+    "pseudo_title": [
+      "Zoom"
+    ],
     "urls": [
       "zoom.us"
     ]
@@ -203,6 +231,9 @@
   {
     "id": 126,
     "title": "Hacker News",
+    "pseudo_title": [
+      "HN"
+    ],
     "urls": [
       "https://news.ycombinator.com"
     ]
@@ -224,14 +255,20 @@
   },
   {
     "id": 129,
-    "title": "AWS",
+    "title": "Amazon Web Services",
+    "pseudo_title": [
+      "AWS"
+    ],
     "urls": [
       "https://aws.amazon.com"
     ]
   },
   {
     "id": 130,
-    "title": "Firebase",
+    "title": "Google Firebase",
+    "pseudo_title": [
+      "Firebase"
+    ],
     "urls": [
       "https://firebase.google.com"
     ]
@@ -246,7 +283,10 @@
   },
   {
     "id": 132,
-    "title": "Outlook",
+    "title": "Microsoft Outlook",
+    "pseudo_title": [
+      "Outlook"
+    ],
     "urls": [
       "https://outlook.live.com"
     ]
@@ -278,6 +318,9 @@
   {
     "id": 136,
     "title": "Disney+",
+    "pseudo_title": [
+      "Disney Plus"
+    ],
     "urls": [
       "https://www.disneyplus.com",
       "https://disneyplus.com"
@@ -286,6 +329,10 @@
   {
     "id": 137,
     "title": "Capital One",
+    "pseudo_title": [
+      "C1",
+      "CapOne"
+    ],
     "urls": [
       "https://www.capitalone.com",
       "https://capitalone.com"
@@ -310,8 +357,18 @@
   {
     "id": 140,
     "title": "Google Drive",
+    "pseudo_title": [
+      "Drive"
+    ],
     "urls": [
       "https://drive.google.com"
+    ]
+  },
+  {
+    "id": 141,
+    "title": "Dropbox",
+    "urls": [
+      "https://www.dropbox.com"
     ]
   }
 ]

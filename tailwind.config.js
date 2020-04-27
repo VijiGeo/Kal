@@ -52,6 +52,7 @@ module.exports = {
       },
       textColor: {
         'primary': '#DDDDDD',
+        'primary-1': '#BBBBBB',
         'secondary': '#817F8E',
       },
       placeholderColor: {

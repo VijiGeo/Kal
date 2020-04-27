@@ -5,26 +5,31 @@ import {
 } from "../../selectors/controller"
 import Section from "../Section"
 import Tile from "../Tile/Item.js"
+import Header from "../Header"
+import Searchbar from "../Searchbar"
 
-class Header extends Component {
+class Panel extends Component {
 
 
-  componentDidMount() {
-  }
+  componentDidMount() { }
 
   render() {
-    const { tabs, cursor, handleHover, handleClick } = this.props
+    const { data: { tabs, handleHover, handleSelect, commandBarFocused, activeMode, activeItemCursor, panelState } } = this.props
 
     return (
       <React.Fragment>
-        <Section title="All Tabs" subtitle={`${tabs.length} Open`} />
-        <div className="cl-mt-xxs">
-          {tabs.map((item, id) => {
-            const isActiveTile = cursor === id
-            return (
-              <Tile key={item.id} handleHover={() => handleHover(id)} handleClick={() => handleClick(id)} item={item} active={isActiveTile} />
-            )
-          })}
+        <Header isInputFocused={commandBarFocused} activeItemCursor={activeItemCursor} activeMode={activeMode} panelState={panelState} />
+        <Searchbar panelState={panelState} />
+        <div id="kal-content" className="cl-overflow-y-auto cl-overflow-x-hidden cl-h-main">
+          <Section title="All Tabs" subtitle={`${tabs.length} Open`} />
+          <div className="cl-mt-xxs">
+            {tabs.map((item, id) => {
+              const isActiveTile = activeItemCursor === id
+              return (
+                <Tile key={item.id} handleHover={() => handleHover(id, item)} handleSelect={() => handleSelect(item.id)} item={item} active={isActiveTile} />
+              )
+            })}
+          </div>
         </div>
       </React.Fragment>
     )
@@ -48,5 +53,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header)
+export default connect(mapStateToProps, mapDispatchToProps)(Panel)
 

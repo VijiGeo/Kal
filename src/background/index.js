@@ -13,9 +13,7 @@ import {
   setTopSitesSucceeded,
 } from './actions/data';
 
-
 const store = createStore(rootReducer, {});
-
 wrapStore(store);
 
 export const getCurrentTab = () => new Promise((resolve) => {
@@ -74,11 +72,15 @@ chrome.commands.onCommand.addListener(function (command) {
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    // console.log(sender.tab.id)
-    if (request.type == "tabId")
-      // console.log("SENDER", sender.tab.data)
-      // store.dispatch(setCurrentTabSucceeded(sender.tab.data))
-      sendResponse({ data: sender.tab });
+    if (request.type === "switchToTab") {
+      console.log("SENDER", sender.tab.data)
+      chrome.tabs.update(request.tab, { highlighted: true, active: true }, (response) => {
+        console.log("RESPONSE: ", response)
+        chrome.windows.update(response.windowId, { focused: true })
+        sendResponse({ data: "TAB_SWITCH_SUCCESS" });
+      })
+    }
+    sendResponse({ data: "DEFAULT" })
   }
 );
 

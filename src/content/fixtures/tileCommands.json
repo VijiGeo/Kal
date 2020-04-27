@@ -1,7 +1,37 @@
 [
   {
-    "id": "GROUP_BY_APP",
-    "title": "Group By App",
-    "desc": "Creates groups by application into separate windows"
+    "id": "SWITCH_TO_TAB",
+    "status": "ACTIVE",
+    "title": "Open Tab",
+    "template": "/open",
+    "desc": "Switches directly into tab"
+  },
+  {
+    "id": "CLOSE_TAB",
+    "status": "ACTIVE",
+    "title": "Close Tab",
+    "template": "/close",
+    "desc": "Removes tab from browser session"
+  },
+  {
+    "id": "CLOSE_DUPLICATES",
+    "status": "ACTIVE",
+    "title": "Close Duplicates",
+    "template": "/clean",
+    "desc": "Removes all tab duplicates"
+  },
+  {
+    "id": "PIN_TAB",
+    "status": "ACTIVE",
+    "title": "Pin Tab",
+    "template": "/pin",
+    "desc": "Pins tab to browser window"
+  },
+  {
+    "id": "SNOOZE_TAB",
+    "status": "NOT_ACTIVE",
+    "title": "Snooze Tab",
+    "template": "/snooze",
+    "desc": "Saves resources by pausing tab"
   }
 ]

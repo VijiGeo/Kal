@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
-import { orderBy, maxBy, isEmpty, escapeRegExp, differenceBy } from "lodash"
+import { orderBy, isEmpty, escapeRegExp } from "lodash"
 import moment from 'moment';
-import { activeGroupIdSelector, searchTermSelector } from './controller'
+import { searchTermSelector } from './controller'
 import apps from "../fixtures/apps"
 
 export const allTabsSelector = (state) => state.data.allTabs.items;

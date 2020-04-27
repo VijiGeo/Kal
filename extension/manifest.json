@@ -27,6 +27,7 @@
   ],
   "permissions": [
     "tabs",
+    "windows",
     "activeTab",
     "storage",
     "bookmarks",

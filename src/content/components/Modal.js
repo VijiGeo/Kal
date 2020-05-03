@@ -9,39 +9,41 @@ class Modal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeItemCursor: 0,
-      activeItem: {},
+      activeItemCursor: 1,
     }
   }
 
   componentDidMount() { }
 
-  handleItemHover = (id, item) => {
+  handleItemHover = (index, item) => {
+    const { updateActiveItem } = this.props
     this.setState({
-      activeItemCursor: id,
-      activeItem: item
+      activeItemCursor: index,
     })
+    updateActiveItem(item)
   }
 
   handleItemSelect = (id) => {
+    const { setModalState } = this.props
+
     chrome.runtime.sendMessage({ type: "switchToTab", tab: id }, (response) => {
-      console.log("STATUS: ", response.data)
-      if (response.data === "TAB_SWITCH_SUCCESS") {
-        this.props.setModalOpen(false)
-      }
+      setModalState(false)
+      this.setState({
+        activeItemCursor: 1
+      })
     })
-    this.props.setModalOpen(false)
   }
 
   handleKeyDown = (e, id) => {
-    const { tabs } = this.props
-    const { activeItemCursor, activeItem } = this.state
+    const { tabs, setModalState } = this.props
+    const { activeItemCursor } = this.state
 
+    const activeElement = tabs[activeItemCursor]
     const scrollContent = document.getElementById('kal-content')
 
     //ESCAPE KEY
     if (e.keyCode === 27) {
-      this.props.setModalOpen(false)
+      setModalState(false)
     }
 
     //UP KEY
@@ -70,20 +72,14 @@ class Modal extends Component {
 
     //ENTER KEY
     else if (e.keyCode === 13) {
-      console.log("ACTIVE ITEM", activeItem)
-      this.handleItemSelect(activeItem.id)
+      this.handleItemSelect(activeElement.id)
     }
-
-    // //OPTION KEY
-    // else if (e.keyCode === 18) {
-    //   updateMode("HOME")
-    // }
   }
 
 
   render() {
-    const { isOpen, tabs, setModalOpen, activeMode, commandBarFocused, searchTerm, updateMode } = this.props
-    const { activeItemCursor, activeItem } = this.state
+    const { isOpen, tabs, activeMode, setModalState, commandBarFocused, activeItem } = this.props
+    const { activeItemCursor } = this.state
 
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -104,16 +100,6 @@ class Modal extends Component {
         // searchPlaceholder: "Type a '/' command or search"
         searchPlaceholder: "Search Tabs"
       },
-      "TILE": {
-        headerTitle: "Tab Commands",
-        showBack: true,
-        searchPlaceholder: "Search commands"
-      },
-      // "UNIVERSAL": {
-      //   headerTitle: "Kal / Universal",
-      //   showBack: true,
-      //   searchPlaceholder: "Search all commands"
-      // }
     }
 
     const panelData = {
@@ -150,7 +136,7 @@ class Modal extends Component {
               leaveFrom='cl-opacity-100'
               leaveTo='cl-opacity-0'
             >
-              <div id="kal-modal-overlay" onClick={() => setModalOpen(false)} className="cl-fixed cl-inset-0 cl-transition-opacity">
+              <div id="kal-modal-overlay" onClick={() => setModalState(false)} className="cl-fixed cl-inset-0 cl-transition-opacity">
                 <div className="cl-absolute cl-inset-0 cl-bg-primary cl-opacity-75"></div>
               </div>
             </UITransition>
@@ -167,9 +153,6 @@ class Modal extends Component {
 
               <div id="kal-modal-panel" onKeyDown={(e) => this.handleKeyDown(e)} className="cl-font-sans cl-transition-all cl-transform cl-bg-primary cl-shadow-3xl cl-overflow-hidden cl-rounded-large cl-max-h-default cl-max-w-default cl-w-main">
                 {activeMode === "HOME" && <HomePanel data={panelData} />}
-                {activeMode === "TILE" && <TilePanel data={panelData} />}
-                {/* {activeMode === "UNIVERSAL" && <UniversalPanel data={panelData} />
-                } */}
               </div>
 
             </UITransition>
@@ -184,7 +167,7 @@ class Modal extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    // activeItemCursor: state.controller.activeItemCursor,
+    activeItem: state.controller.activeItem,
     activeMode: state.controller.activeMode,
     commandBarFocused: state.controller.commandBarFocused,
     searchTerm: state.controller.searchTerm
@@ -193,12 +176,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setModalOpen: (value) => {
-      dispatch({
-        type: 'COMMAND_PANEL_TOGGLED',
-        payload: value
-      })
-    },
     updateMode: (value) => {
       dispatch({
         type: 'ACTIVE_MODE_SET',

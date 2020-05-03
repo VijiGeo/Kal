@@ -3,29 +3,17 @@ import { createStore } from 'redux';
 import rootReducer from './reducers';
 import { wrapStore } from 'webext-redux';
 import {
-  commandPanelToggled
-} from './actions/controller';
-import {
   setHistorySucceeded,
   setAllTabsSucceeded,
-  setCurrentTabSucceeded,
   setRecentlyClosedSucceeded,
   setTopSitesSucceeded,
+  setRecentlyVisitedSucceeded
 } from './actions/data';
 
 const store = createStore(rootReducer, {});
 wrapStore(store);
 
-export const getCurrentTab = () => new Promise((resolve) => {
-  chrome.tabs.query({ currentWindow: true, active: true, lastFocusedWindow: true }, (tabs) => {
-    const currentTab = tabs[0]
-    // console.log("TABS", currentTab)
-    store.dispatch(setCurrentTabSucceeded(currentTab))
-    resolve(currentTab)
-  })
-})
-
-export const getAllTabs = () => new Promise((resolve) => {
+const getAllTabs = () => new Promise((resolve) => {
   chrome.tabs.query({
   }, (tabs) => {
     store.dispatch(setAllTabsSucceeded(tabs))
@@ -33,57 +21,80 @@ export const getAllTabs = () => new Promise((resolve) => {
   })
 })
 
-export const getRecentlyClosed = () => new Promise((resolve) => {
+const getRecentlyClosed = () => new Promise((resolve) => {
   chrome.sessions.getRecentlyClosed({}, (session) => {
     store.dispatch(setRecentlyClosedSucceeded(session))
     resolve(session);
   })
 })
 
-export const getTopSites = () => new Promise((resolve) => {
+const getTopSites = () => new Promise((resolve) => {
   chrome.topSites.get((sites) => {
     store.dispatch(setTopSitesSucceeded(sites))
     resolve(sites)
   })
 })
 
-export const getHistory = (past) => new Promise((resolve) => {
+const getHistory = (past) => new Promise((resolve) => {
   chrome.history.search({ text: '', startTime: parseFloat(past), maxResults: 7500 }, (history) => {
     store.dispatch(setHistorySucceeded(history))
     resolve(history)
   })
 })
 
-// store.dispatch(setAppGroupsSucceeded(apps))
-// console.log("TABS: ", getAllTabs())
-// console.log("RECENTLY CLOSED: ", getRecentlyClosed())
-// console.log("TOP SITES: ", getTopSites())
-// console.log("HISTORY: ", getHistory())
+const executeModalOpen = (command) => {
+  getAllTabs()
+
+  const recentlyVisited = store.getState().data.recentlyVisited.items
+  console.log("RECENTLY VISITED", recentlyVisited)
+
+
+  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
+    const currentTab = tabs[0]
+    chrome.tabs.sendMessage(currentTab.id, { command: command, currentTab: currentTab }, {}, function (response) {
+      // console.log("MODAL RESPONSE: ", response)
+    })
+  })
+
+}
+
+chrome.browserAction.onClicked.addListener(function (tab) {
+  executeModalOpen("toggle-feature")
+});
 
 chrome.commands.onCommand.addListener(function (command) {
-  console.log('Command: ', command);
   if (command === "toggle-feature") {
-    const isPanelToggled = store.getState().controller.commandPanelToggled
-    getCurrentTab()
-    getAllTabs()
-    store.dispatch(commandPanelToggled(!isPanelToggled))
+    executeModalOpen(command)
   }
 });
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.type === "switchToTab") {
-      console.log("SENDER", sender.tab.data)
       chrome.tabs.update(request.tab, { highlighted: true, active: true }, (response) => {
-        console.log("RESPONSE: ", response)
         chrome.windows.update(response.windowId, { focused: true })
         sendResponse({ data: "TAB_SWITCH_SUCCESS" });
       })
     }
-    sendResponse({ data: "DEFAULT" })
+    sendResponse({ data: {} })
   }
 );
+
+chrome.tabs.onCreated.addListener(function (tab) {
+  store.dispatch(setRecentlyVisitedSucceeded(tab))
+  getAllTabs()
+
+})
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  // console.log("ON UPDATE", tabId, changeInfo, tab)
+  store.dispatch(setRecentlyVisitedSucceeded(tab))
+  getAllTabs()
+})
+
 
 getRecentlyClosed()
 getHistory()
 getTopSites()
+
+

@@ -7,9 +7,10 @@
     "keyword": "kal"
   },
   "browser_action": {
-    "default_popup": "./dist/popup.html",
-    "default_title": "Open the popup",
-    "default_icon": "./dist/icons/icon-16.png"
+    "default_title": "Kal - Chrome Command Line",
+    "default_icon": {
+      "16": "./dist/icons/icon-16.png"
+    }
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
@@ -22,8 +23,12 @@
       ],
       "matches": [
         "<all_urls>"
-      ]
+      ],
+      "all_frames": false
     }
+  ],
+  "web_accessible_resources": [
+    "dist/tailwind.dist.css"
   ],
   "permissions": [
     "tabs",
@@ -34,20 +39,17 @@
     "topSites",
     "management",
     "sessions",
-    "history"
+    "history",
+    "<all_urls>"
   ],
+  "offline_enabled": true,
   "commands": {
     "toggle-feature": {
       "suggested_key": {
         "default": "Ctrl+E"
       },
-      "description": "Send a toggle-feature event to the extension"
-    },
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Ctrl+E",
-        "mac": "Ctrl+E"
-      }
+      "description": "Send a toggle-feature event to the extension",
+      "global": true
     }
   },
   "background": {

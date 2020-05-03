@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 class Tile extends Component {
   render() {
-    const { item, active, handleHover, handleSelect } = this.props
+    const { item, active, handleHover, handleSelect, updateActiveItem } = this.props
 
     const url = item.url
     const httpReplacedUrl = url.replace("https://", "")
@@ -10,7 +11,7 @@ class Tile extends Component {
     //TO-DO ADD HTTPS TO SOME FAVICON URLS
 
     return (
-      <div onClick={handleSelect} onMouseOver={handleHover} className={`${active && "cl-border-tile cl-bg-secondary"} cl-border-l-2 cl-border-0 cl-border-transparent cl-border-solid focus:cl-outline-none focus:cl-bg-gray-50 cl-w-main cl-h-tile cl-cursor-pointer`}>
+      <div onClick={handleSelect} onMouseEnter={handleHover} className={`${active && "cl-border-tile cl-bg-secondary"} cl-border-l-2 cl-border-0 cl-border-transparent cl-border-solid focus:cl-outline-none focus:cl-bg-gray-50 cl-w-main cl-h-tile cl-cursor-pointer`}>
 
         <div className="cl-py-md cl-px-md cl-whitespace-no-wrap">
           <div className="cl-flex cl-items-center cl-justify-center">
@@ -36,5 +37,18 @@ class Tile extends Component {
   }
 }
 
-export default Tile
+const mapStateToProps = (state) => ({});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateActiveItem: (value) => {
+      dispatch({
+        type: 'ACTIVE_ITEM_SET',
+        payload: value
+      })
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tile)
 

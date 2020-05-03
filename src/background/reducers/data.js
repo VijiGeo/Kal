@@ -4,7 +4,7 @@ import {
   SET_CURRENT_TAB_SUCCEEDED,
   SET_RECENTLY_CLOSED_SUCCEEDED,
   SET_TOP_SITES_SUCCEEDED,
-  // SET_APP_GROUPS_SUCCEEDED
+  SET_RECENTLY_VISITED_SUCCEEDED
 } from '../actions/data';
 
 const initialState = {
@@ -33,11 +33,11 @@ const initialState = {
     fetching: false,
     error: null
   },
-  // appGroups: {
-  //   items: [],
-  //   fetching: false,
-  //   error: null
-  // }
+  recentlyVisited: {
+    items: [null, null, null, null, null],
+    fetching: false,
+    error: null
+  }
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -64,7 +64,7 @@ export const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         currentTab: {
-          items: action.payload,
+          item: action.payload,
           fetching: false,
           error: null
         }
@@ -87,15 +87,15 @@ export const dataReducer = (state = initialState, action) => {
           error: null
         }
       };
-    // case SET_APP_GROUPS_SUCCEEDED:
-    //   return {
-    //     ...state,
-    //     appGroups: {
-    //       items: action.payload,
-    //       fetching: false,
-    //       error: null
-    //     }
-    //   };
+    case SET_RECENTLY_VISITED_SUCCEEDED:
+      return {
+        ...state,
+        recentlyVisited: {
+          items: action.payload,
+          fetching: false,
+          error: null
+        }
+      };
     default:
       return state;
   }

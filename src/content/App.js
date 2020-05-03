@@ -2,47 +2,52 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from "./components/Modal"
 import {
-  allTabsSelector, searchFilteredTabsSelector
+  searchFilteredTabsSelector
 } from './selectors/data';
 
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     thisTab: {}
-  //   }
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      commandPanelToggled: false
+    }
+  }
 
-  componentDidMount() { }
+  componentDidMount() {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.command === "toggle-feature") {
+        this.handleModalToggle()
+        sendResponse({ data: request.currentTab.title })
+      }
+      sendResponse({ data: {} })
+    })
+  }
+
+  handleModalToggle() {
+    this.setState(prevState => ({
+      commandPanelToggled: !prevState.commandPanelToggled
+    }))
+  }
+
+  setModalState = (modalState) => {
+    this.setState({
+      commandPanelToggled: modalState
+    })
+  }
 
   render() {
-    const { isPanelToggled, tabs, currentTab } = this.props
+    const { tabs } = this.props
+    const { commandPanelToggled } = this.state
 
-    // chrome.runtime.sendMessage({ type: "tabId" }, (response) => {
-    //   this.setState(prevState => ({
-    //     thisTab: response.data.id
-    //   }))
-    // })
-    // 
-    // const modalOpen = isPanelToggled && currentTab.items.id === thisTab
-
-    // console.log("CURRENT TAB", currentTab)
-
-    const modalOpen = isPanelToggled && currentTab
-    // console.log("CURRENT TAB", currentTab)
-    // console.log("IS MODAL OPEN", modalOpen)
-    // console.log("ALL TABS", tabs)
     return (
-      <Modal isOpen={modalOpen} tabs={tabs} />
+      <Modal isOpen={commandPanelToggled} tabs={tabs} setModalState={this.setModalState} />
     );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    isPanelToggled: state.controller.commandPanelToggled,
-    tabs: searchFilteredTabsSelector(state),
-    currentTab: state.data.currentTab
+    tabs: searchFilteredTabsSelector(state)
   };
 };
 

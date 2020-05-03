@@ -5,11 +5,11 @@ import { searchTermSelector } from './controller'
 import apps from "../fixtures/apps"
 
 export const allTabsSelector = (state) => state.data.allTabs.items;
-export const currentTabSelector = (state) => state.data.currentTab.items;
+export const currentTabSelector = (state) => state.data.currentTab.item;
 export const recentlyClosedTabsSelector = (state) => state.data.recentlyClosed.items
 export const topSitesSelector = (state) => state.data.topSites.items;
 export const historySelector = (state) => state.data.history.items;
-export const appGroupsSelector = (state) => state.data.appGroups.items;
+export const recentlyVisited = (state) => state.data.recentlyVisited.items
 
 export const normalizeTabsSelector = createSelector(allTabsSelector, currentTabSelector, recentlyClosedTabsSelector, topSitesSelector, historySelector, (allTabs, currentTab, recentlyClosedTabs, topSites, history) => {
 
@@ -26,7 +26,7 @@ export const normalizeTabsSelector = createSelector(allTabsSelector, currentTabS
 
     const isTopSite = !isEmpty(topSiteMatch)
     const isRecentlyClosed = !isEmpty(recentlyClosedMatch)
-    const isCurrentTab = currentTab.id === item.id
+    const isCurrentTab = currentTab ? currentTab.id === item.id : false
     const isPinned = item ? item.pinned : false
     const isActive = item ? item.active : false
     const isDiscarded = item ? item.discarded : false

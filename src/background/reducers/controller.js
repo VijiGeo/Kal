@@ -12,7 +12,7 @@ const initialState = {
   commandPanelToggled: false,
   commandBarFocused: true,
   activeMode: "HOME",
-  activeItem: 0,
+  activeItem: {},
   searchTerm: '',
   activeGroupType: "app",
   activeGroupId: 1

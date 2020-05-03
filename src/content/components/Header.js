@@ -6,7 +6,7 @@ class Header extends Component {
   componentDidMount() { }
 
   render() {
-    const { activeItem, panelState, setModalOpen } = this.props
+    const { panelState, setModalOpen } = this.props
 
     return (
       <div className="cl-py-md cl-border-b-1 cl-border-primary">
@@ -16,10 +16,10 @@ class Header extends Component {
               <path d="M10 19L3 12M3 12L10 5M3 12L21 12" stroke="#817F8E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           } */}
-          <div className="cl-px-lg cl-font-medium cl-text-sm cl-leading-md cl-text-primary">
+          <div className="cl-px-lg cl-flex-auto cl-font-medium cl-text-sm cl-leading-md cl-text-primary">
             {panelState.headerTitle}
           </div>
-          <a target="_blank" onClick={() => setModalOpen(false)} href="https://forms.gle/MhNEtXk7wTTrWaRE7" className="cl-pl-md cl-flex-shrink-0 cl-font-medium cl-text-sm cl-text-secondary cl-text-right">
+          <a target="_blank" onClick={() => setModalOpen(false)} href="https://forms.gle/MhNEtXk7wTTrWaRE7" className="cl-px-lg cl-font-medium cl-text-sm cl-leading-md cl-text-secondary">
             Send Feedback
           </a>
         </div>
@@ -28,21 +28,10 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    activeMode: state.controller.activeMode,
-    searchTerm: state.controller.searchTerm
-  };
-};
+const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSearchTermUpdate: (value) => {
-      dispatch({
-        type: 'SEARCH_TERM_UPDATED',
-        payload: value
-      })
-    },
     setModalOpen: (value) => {
       dispatch({
         type: 'COMMAND_PANEL_TOGGLED',

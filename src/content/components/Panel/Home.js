@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  searchTermSelector
-} from "../../selectors/controller"
 import Section from "../Section"
 import Tile from "../Tile/Item.js"
 import Header from "../Header"
 import Searchbar from "../Searchbar"
 
 class Panel extends Component {
-
 
   componentDidMount() { }
 
@@ -20,13 +16,14 @@ class Panel extends Component {
       <React.Fragment>
         <Header isInputFocused={commandBarFocused} activeItemCursor={activeItemCursor} activeMode={activeMode} panelState={panelState} />
         <Searchbar panelState={panelState} />
+        <Section title="All Tabs" subtitle={`${tabs.length} Open`} />
         <div id="kal-content" className="cl-overflow-y-auto cl-overflow-x-hidden cl-h-main">
-          <Section title="All Tabs" subtitle={`${tabs.length} Open`} />
           <div className="cl-mt-xxs">
-            {tabs.map((item, id) => {
-              const isActiveTile = activeItemCursor === id
+            {tabs.map((item, index) => {
+              const isActiveTile = activeItemCursor === index
+
               return (
-                <Tile key={item.id} handleHover={() => handleHover(id, item)} handleSelect={() => handleSelect(item.id)} item={item} active={isActiveTile} />
+                <Tile key={item.id} handleHover={() => handleHover(index, item)} handleSelect={() => handleSelect(item.id)} item={item} active={isActiveTile} />
               )
             })}
           </div>
@@ -36,17 +33,13 @@ class Panel extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    searchTerm: searchTermSelector(state)
-  };
-};
+const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSearchTermUpdate: (value) => {
+    updateActiveItem: (value) => {
       dispatch({
-        type: 'SEARCH_TERM_UPDATED',
+        type: 'ACTIVE_ITEM_SET',
         payload: value
       })
     },

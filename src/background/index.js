@@ -7,7 +7,7 @@ import {
   setAllTabsSucceeded,
   setRecentlyClosedSucceeded,
   setTopSitesSucceeded,
-  setRecentlyVisitedSucceeded
+  setCurrentTabSessionSucceeded
 } from './actions/data';
 
 const store = createStore(rootReducer, {});
@@ -44,11 +44,6 @@ const getHistory = (past) => new Promise((resolve) => {
 
 const executeModalOpen = (command) => {
   getAllTabs()
-
-  const recentlyVisited = store.getState().data.recentlyVisited.items
-  console.log("RECENTLY VISITED", recentlyVisited)
-
-
   chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
     const currentTab = tabs[0]
     chrome.tabs.sendMessage(currentTab.id, { command: command, currentTab: currentTab }, {}, function (response) {
@@ -81,15 +76,22 @@ chrome.runtime.onMessage.addListener(
 );
 
 chrome.tabs.onCreated.addListener(function (tab) {
-  store.dispatch(setRecentlyVisitedSucceeded(tab))
+  // console.log("TAB CREATED", tab)
   getAllTabs()
 
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  // console.log("ON UPDATE", tabId, changeInfo, tab)
-  store.dispatch(setRecentlyVisitedSucceeded(tab))
+  // console.log("TAB UPDATED", tabId, changeInfo, tab)
   getAllTabs()
+})
+
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+  console.log("ACTIVE TAB CHANGED", activeInfo)
+  // const currentTabSession = store.getState().data.currentTabSession.items
+  // console.log("CURRENT SESSION", currentTabSession)
+  store.dispatch(setCurrentTabSessionSucceeded(activeInfo))
+
 })
 
 

@@ -4,36 +4,34 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Store } from 'webext-redux';
 import App from './App.js';
-import ShadowDOM from "react-shadow"
 
 const proxyStore = new Store();
 
 window.addEventListener('load', () => {
-  const anchor = document.createElement('div');
-  anchor.id = 'kal-app'
-  document.body.insertBefore(anchor, document.body.firstChild)
 
-  proxyStore.ready().then(() => {
-    render(
-      <Provider store={proxyStore}>
-        {/* <ShadowDOM> */}
-        <App />
-        {/* </ShadowDOM> */}
-      </Provider>, document.getElementById('kal-app')
-    )
-  })
+  class CustomElement extends HTMLElement {
+    connectedCallback() {
+      const root = document.body.appendChild(this.doc.createElement('div'));
+      const shadow = root.attachShadow({ mode: 'closed' });
+      const container = shadow.appendChild(this.doc.createElement('div'));
+
+      Object.defineProperty(root, "ownerDocument", { value: shadow });
+      shadow.createElement = (...args) => document.createElement(...args);
+      shadow.createElementNS = (...args) => document.createElementNS(...args);
+      shadow.createTextNode = (...args) => document.createTextNode(...args);
+
+      proxyStore.ready().then(() => {
+        render(
+          <Provider store={proxyStore}>
+            <App />
+          </Provider>, container
+        )
+      })
+    }
+  }
+
+  // window.customElements.define("custom-element", CustomElement)
+  console.log("WINDOW", window)
+
 })
 
-
-// window.addEventListener('load', () => {
-//   const injectDOM = document.createElement('div');
-//   document.body.insertBefore(injectDOM, document.body.firstChild);
-//   store.ready().then(() => {
-//   render(
-//     <Provider store={store}>
-//        <ShadowDOM include={['styles/global.css']}>                                  <InjectApp />
-//        <ShadowDOM/>
-//      </Provider>,
-//      injectDOM);
-//   });
-// });

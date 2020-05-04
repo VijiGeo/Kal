@@ -1,8 +1,9 @@
 /* @import url('https://fonts.googleapis.com/css?family=Lato&display=swap'); */
 
 /* purgecss start ignore */
-/* @tailwind base; */
 /* purgecss end ignore */
+
+/* @tailwind base; */
 
 @tailwind components;
 

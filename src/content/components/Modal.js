@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UITransition from './Transition'
 import { Transition } from 'react-transition-group';
 import HomePanel from "./Panel/Home"
-import TilePanel from "./Panel/Tile"
+// import TilePanel from "./Panel/Tile"
 import { connect } from 'react-redux';
 
 class Modal extends Component {
@@ -13,10 +13,18 @@ class Modal extends Component {
     }
   }
 
-  componentDidMount() { }
+  componentDidMount() {
+    // setTimeout(() => {
+    //   const commandLine = this.shadowRoot.querySelector('#kal-command')
+    //   commandLine.focus()
+    // }, 400)
+  }
 
   handleItemHover = (index, item) => {
     const { updateActiveItem } = this.props
+
+    console.log("HOVERED", item)
+
     this.setState({
       activeItemCursor: index,
     })
@@ -25,6 +33,8 @@ class Modal extends Component {
 
   handleItemSelect = (id) => {
     const { setModalState } = this.props
+
+    console.log("SELECTED", id)
 
     chrome.runtime.sendMessage({ type: "switchToTab", tab: id }, (response) => {
       setModalState(false)
@@ -48,6 +58,8 @@ class Modal extends Component {
 
     //UP KEY
     if (e.keyCode === 38 && activeItemCursor > 0) {
+      console.log("UP KEY PRESSED", e)
+
       e.preventDefault()
       this.setState(prevState => ({
         activeItemCursor: prevState.activeItemCursor - 1
@@ -60,6 +72,8 @@ class Modal extends Component {
 
     //DOWN KEY
     else if (e.keyCode === 40 && activeItemCursor < tabs.length - 1) {
+      console.log("DOWN KEY PRESSED", e)
+
       e.preventDefault()
       this.setState(prevState => ({
         activeItemCursor: prevState.activeItemCursor + 1
@@ -82,7 +96,7 @@ class Modal extends Component {
     const { activeItemCursor } = this.state
 
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
+      // document.body.style.overflow = 'hidden'
       // Save current focus
       // focusedElementBeforeModal = document.activeElement;
       // Listen for and trap the keyboard
@@ -114,7 +128,7 @@ class Modal extends Component {
     }
 
     return (
-      <div id="kal-modal" ref="test">
+      <div id="kal-modal" >
         <Transition
           unmountOnExit
           in={isOpen}
@@ -151,7 +165,7 @@ class Modal extends Component {
               leaveTo='cl-opacity-0 cl-translate-y-4 sm:cl-translate-y-0 sm:cl-scale-95'
             >
 
-              <div id="kal-modal-panel" onKeyDown={(e) => this.handleKeyDown(e)} className="cl-font-sans cl-transition-all cl-transform cl-bg-primary cl-shadow-3xl cl-overflow-hidden cl-rounded-large cl-max-h-default cl-max-w-default cl-w-main">
+              <div id="kal-modal-panel" className="cl-font-sans cl-transition-all cl-transform cl-bg-primary cl-shadow-3xl cl-overflow-hidden cl-rounded-large cl-max-h-default cl-max-w-default cl-w-main" onKeyDown={(e) => this.handleKeyDown(e)}>
                 {activeMode === "HOME" && <HomePanel data={panelData} />}
               </div>
 

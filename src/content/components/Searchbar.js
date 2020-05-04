@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 class Searchbar extends Component {
 
   componentDidMount() {
+
     setTimeout(() => {
       const commandLine = document.getElementById('kal-command')
       commandLine.focus()

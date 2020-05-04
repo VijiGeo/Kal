@@ -19,7 +19,7 @@ class Header extends Component {
           <div className="cl-px-lg cl-flex-auto cl-font-medium cl-text-sm cl-leading-md cl-text-primary">
             {panelState.headerTitle}
           </div>
-          <a target="_blank" onClick={() => setModalOpen(false)} href="https://forms.gle/MhNEtXk7wTTrWaRE7" className="cl-px-lg cl-font-medium cl-text-sm cl-leading-md cl-text-secondary">
+          <a target="_blank" onClick={() => setModalOpen(false)} href="https://forms.gle/MhNEtXk7wTTrWaRE7" className="cl-px-lg cl-font-medium cl-text-sm cl-leading-md cl-text-secondary cl-no-underline">
             Send Feedback
           </a>
         </div>

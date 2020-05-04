@@ -36,8 +36,10 @@ class App extends Component {
   }
 
   render() {
-    const { tabs } = this.props
+    const { tabs, searchTerm } = this.props
     const { commandPanelToggled } = this.state
+
+    // console.log("SEARCH TERM", searchTerm)
 
     return (
       <Modal isOpen={commandPanelToggled} tabs={tabs} setModalState={this.setModalState} />
@@ -47,7 +49,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    tabs: searchFilteredTabsSelector(state)
+    tabs: searchFilteredTabsSelector(state),
+    searchTerm: state.controller.searchTerm
   };
 };
 

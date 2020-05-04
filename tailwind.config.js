@@ -68,9 +68,6 @@ module.exports = {
         'primary': "#2D2D33",
         'secondary': "#37363C"
       }),
-      fontFamily: {
-        'sans': ['Helvetica']
-      },
       fontSize: {
         'xs': '12px',
         'sm': '14px',
@@ -81,6 +78,9 @@ module.exports = {
     }
   },
   variants: {},
-  plugins: []
+  plugins: [
+    require('tailwindcss-font-inter')
+  ]
 }
+
 

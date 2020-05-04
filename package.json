@@ -25,6 +25,7 @@
     "postcss-cli": "^7.1.0",
     "postcss-loader": "^3.0.0",
     "tailwindcss": "^1.2.0",
+    "tailwindcss-font-inter": "^1.0.8",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "webpack-extension-reloader": "^1.1.4"
@@ -36,7 +37,6 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^4.0.0",
-    "react-shadow": "^18.1.0",
     "react-transition-group": "^4.3.0",
     "redux": "^3.0.4",
     "reselect": "^4.0.0",

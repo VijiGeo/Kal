@@ -4,7 +4,7 @@ import {
   SET_CURRENT_TAB_SUCCEEDED,
   SET_RECENTLY_CLOSED_SUCCEEDED,
   SET_TOP_SITES_SUCCEEDED,
-  SET_RECENTLY_VISITED_SUCCEEDED
+  SET_CURRENT_TAB_SESSION_SUCCEEDED
 } from '../actions/data';
 
 const initialState = {
@@ -33,8 +33,8 @@ const initialState = {
     fetching: false,
     error: null
   },
-  recentlyVisited: {
-    items: [null, null, null, null, null],
+  currentTabSession: {
+    items: [],
     fetching: false,
     error: null
   }
@@ -87,11 +87,11 @@ export const dataReducer = (state = initialState, action) => {
           error: null
         }
       };
-    case SET_RECENTLY_VISITED_SUCCEEDED:
+    case SET_CURRENT_TAB_SESSION_SUCCEEDED:
       return {
         ...state,
-        recentlyVisited: {
-          items: action.payload,
+        currentTabSession: {
+          items: [...state.currentTabSession.items, { ...action.payload }],
           fetching: false,
           error: null
         }

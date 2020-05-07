@@ -17,6 +17,8 @@ export const normalizeTabsSelector = createSelector(allTabsSelector, currentTabS
   // console.log("All tabs: ", allTabs)
 
   const lastVisited = (n) => {
+    // const uniqueCurrentTabSession = uniqBy(currentTabSession, item => item.tabId)
+    // console.log("UNIQUE CURRENT", uniqueCurrentTabSession)
     return currentTabSession[currentTabSession.length - n]
   }
   const lastOneVisitedTab = lastVisited(1)
@@ -24,7 +26,9 @@ export const normalizeTabsSelector = createSelector(allTabsSelector, currentTabS
   const lastThreeVisitedTab = lastVisited(3)
   const lastFourVisitedTab = lastVisited(4)
   const lastFiveVisitedTab = lastVisited(5)
+  const lastSixVisitedTab = lastVisited(6)
 
+  // console.log("CURRENT TABS SESSION", currentTabSession)
   // console.log(lastOneVisitedTab, lastTwoVisitedTab, lastThreeVisitedTab, lastFourVisitedTab, lastFiveVisitedTab)
 
   const enhancedTabs = allTabs.map(item => {
@@ -34,9 +38,8 @@ export const normalizeTabsSelector = createSelector(allTabsSelector, currentTabS
     const appMatch = apps.find(app => app.urls.some(url => item.url.includes(url)))
 
     const historicalMatch = history.find((obj) => obj.url === item.url)
-    const today = moment()
-    const past = historicalMatch && moment(historicalMatch.lastVisitTime)
-    const daysSinceLastVisit = today.diff(past, 'days') + 1
+    const recentMatches = currentTabSession.filter(obj => obj.tabId === item.id)
+    const recentMatchCount = recentMatches.length
 
     const isTopSite = !isEmpty(topSiteMatch)
     const isRecentlyClosed = !isEmpty(recentlyClosedMatch)
@@ -50,22 +53,36 @@ export const normalizeTabsSelector = createSelector(allTabsSelector, currentTabS
     const isLastThreeVisitedTab = lastThreeVisitedTab && lastThreeVisitedTab.tabId === item.id ? true : false
     const isLastFourVisitedTab = lastFourVisitedTab && lastFourVisitedTab.tabId === item.id ? true : false
     const isLastFiveVisitedTab = lastFiveVisitedTab && lastFiveVisitedTab.tabId === item.id ? true : false
+    const isLastSixVisitedTab = lastSixVisitedTab && lastSixVisitedTab.tabId === item.id ? true : false
 
-    const visitCountScore = historicalMatch ? historicalMatch.visitCount : 0.5
-    const currentTabScore = isCurrentTab ? 1000000 : 0.5
-    const pinnedScore = isPinned ? 500 : 0.5
-    const topSiteScore = isTopSite ? 500 : 0.5
-    const recentlyClosedScore = isRecentlyClosed ? 250 : 0.5
-    const activeScore = isActive ? 250 : 0.5
-    const discardedScore = isDiscarded ? 100 : 1
+    const visitCountScore = historicalMatch ? historicalMatch.visitCount : 0
+    // const recentVisitCountScore = recentMatchCount * 10
+    // console.log("RECENT VISIT SCORE", recentVisitCountScore, recentMatches)
+    const currentTabScore = isCurrentTab ? 1000000000 : 0
 
-    const lastOneVisitedTabScore = isLastOneVisitedTab ? 75000 : 0.5
-    const lastTwoVisitedTabScore = isLastTwoVisitedTab ? 50000 : 0.5
-    const lastThreeVisitedTabScore = isLastThreeVisitedTab ? 25000 : 0.5
-    const lastFourVisitedTabScore = isLastFourVisitedTab ? 10000 : 0.5
-    const lastFiveVisitedTabScore = isLastFiveVisitedTab ? 5000 : 0.5
+    const lastOneVisitedTabScore = isLastOneVisitedTab ? 999000 : 0
+    const lastTwoVisitedTabScore = isLastTwoVisitedTab ? 750000 : 0
+    const lastThreeVisitedTabScore = isLastThreeVisitedTab ? 500000 : 0
+    const lastFourVisitedTabScore = isLastFourVisitedTab ? 250000 : 0
+    const lastFiveVisitedTabScore = isLastFiveVisitedTab ? 100000 : 0
+    const lastSixVisitedTabScore = isLastSixVisitedTab ? 50000 : 0
+    const totalRecencyScore = lastOneVisitedTabScore + lastTwoVisitedTabScore + lastThreeVisitedTabScore + lastFourVisitedTabScore + lastFiveVisitedTabScore + lastSixVisitedTabScore
 
-    const relevanceScore = (visitCountScore + currentTabScore + pinnedScore + discardedScore + activeScore + topSiteScore + recentlyClosedScore + lastOneVisitedTabScore + lastTwoVisitedTabScore + lastThreeVisitedTabScore + lastFourVisitedTabScore + lastFiveVisitedTabScore) / (daysSinceLastVisit + discardedScore)
+    const pinnedScore = isPinned ? 10 : 0
+    const topSiteScore = isTopSite ? 10 : 0
+    const recentlyClosedScore = isRecentlyClosed ? 2.5 : 0
+    const activeScore = isActive ? 2.5 : 0
+
+    // const discardedScore = isDiscarded ? 10 : 1
+    const today = moment()
+    const past = historicalMatch && moment(historicalMatch.lastVisitTime)
+    const daysSinceLastVisit = today.diff(past, 'days') + 1
+
+    const historicalScore = (visitCountScore + pinnedScore + activeScore + topSiteScore + recentlyClosedScore) / (daysSinceLastVisit)
+    const relevanceScore = currentTabScore + totalRecencyScore + historicalScore
+
+    // console.log("CURRENT TAB SCORE", currentTabScore, currentTab, item)
+    // console.log(item.title, totalRecencyScore, relevanceScore, historicalScore)
 
     return {
       ...item,

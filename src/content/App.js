@@ -19,7 +19,6 @@ class App extends Component {
         this.handleModalToggle()
         sendResponse({ data: request.currentTab.title })
       }
-      sendResponse({ data: {} })
     })
   }
 

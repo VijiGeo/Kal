@@ -12,6 +12,9 @@ const extensionPages = {
 const backgroundScript = {
   background: './background/index.js'
 }
+const polyfillScript = {
+  polyfill: './content/web-components-polyfill.js'
+}
 
 let config = {
   mode: process.env.NODE_ENV,
@@ -22,7 +25,8 @@ let ExtensionConfig = Object.assign({}, config, {
   entry: {
     ...backgroundScript,
     ...contentScripts,
-    ...extensionPages
+    ...extensionPages,
+    ...polyfillScript
   },
   output: {
     path: __dirname + '/extension/dist/',

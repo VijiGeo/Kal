@@ -1,37 +1,31 @@
 import 'alpinejs'
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Store } from 'webext-redux';
 import App from './App.js';
+import ReactHTMLElement from 'react-html-element';
 
 const proxyStore = new Store();
 
-window.addEventListener('load', () => {
+class CustomComponent extends ReactHTMLElement {
+  connectedCallback() {
 
-  class CustomElement extends HTMLElement {
-    connectedCallback() {
-      const root = document.body.appendChild(this.doc.createElement('div'));
-      const shadow = root.attachShadow({ mode: 'closed' });
-      const container = shadow.appendChild(this.doc.createElement('div'));
+    this.template = `<link rel="stylesheet" type="text/css" href="${chrome.extension.getURL("dist/tailwind.dist.css")}"></link>
+    <div id='shadow-kal-root' />`
 
-      Object.defineProperty(root, "ownerDocument", { value: shadow });
-      shadow.createElement = (...args) => document.createElement(...args);
-      shadow.createElementNS = (...args) => document.createElementNS(...args);
-      shadow.createTextNode = (...args) => document.createTextNode(...args);
-
-      proxyStore.ready().then(() => {
-        render(
-          <Provider store={proxyStore}>
-            <App />
-          </Provider>, container
-        )
-      })
-    }
+    proxyStore.ready().then(() => {
+      render(
+        <Provider store={proxyStore}>
+          <App />
+        </Provider>, this.mountPoint
+      )
+    })
   }
+}
 
-  // window.customElements.define("custom-element", CustomElement)
-  console.log("WINDOW", window)
+customElements.define('kal-container', CustomComponent);
 
-})
-
+const template = document.createElement('kal-container')
+document.body.appendChild(template);

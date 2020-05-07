@@ -36,7 +36,7 @@ module.exports = {
         'default': '610px'
       },
       height: {
-        'main': '542px',
+        'main': '480px',
         'tile': '80px',
       },
       maxWidth: {

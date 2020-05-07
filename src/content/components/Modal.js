@@ -10,21 +10,30 @@ class Modal extends Component {
     super(props);
     this.state = {
       activeItemCursor: 1,
+      scrollPosition: 300
     }
   }
 
   componentDidMount() {
-    // setTimeout(() => {
-    //   const commandLine = this.shadowRoot.querySelector('#kal-command')
-    //   commandLine.focus()
-    // }, 400)
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.command === "toggle-feature") {
+        this.setItemCursor(1, 400)
+        sendResponse({ data: request.currentTab.title })
+      }
+    })
+  }
+
+
+  setItemCursor = (n, time) => {
+    setTimeout(() => {
+      this.setState({
+        activeItemCursor: n
+      })
+    }, time)
   }
 
   handleItemHover = (index, item) => {
     const { updateActiveItem } = this.props
-
-    console.log("HOVERED", item)
-
     this.setState({
       activeItemCursor: index,
     })
@@ -32,12 +41,11 @@ class Modal extends Component {
   }
 
   handleItemSelect = (id) => {
-    const { setModalState } = this.props
-
-    console.log("SELECTED", id)
+    const { setModalState, onSearchTermUpdate } = this.props
 
     chrome.runtime.sendMessage({ type: "switchToTab", tab: id }, (response) => {
       setModalState(false)
+      onSearchTermUpdate("")
       this.setState({
         activeItemCursor: 1
       })
@@ -46,10 +54,10 @@ class Modal extends Component {
 
   handleKeyDown = (e, id) => {
     const { tabs, setModalState } = this.props
-    const { activeItemCursor } = this.state
+    const { activeItemCursor, scrollPosition } = this.state
 
     const activeElement = tabs[activeItemCursor]
-    const scrollContent = document.getElementById('kal-content')
+    const scrollContent = document.querySelector('kal-container').shadowRoot.querySelector('#kal-content')
 
     //ESCAPE KEY
     if (e.keyCode === 27) {
@@ -58,7 +66,7 @@ class Modal extends Component {
 
     //UP KEY
     if (e.keyCode === 38 && activeItemCursor > 0) {
-      console.log("UP KEY PRESSED", e)
+      // console.log("UP KEY PRESSED", e)
 
       e.preventDefault()
       this.setState(prevState => ({
@@ -66,13 +74,16 @@ class Modal extends Component {
       }), () => {
         if (activeItemCursor < tabs.length - 1 - 2) {
           scrollContent.scrollBy(0, -80)
+          this.setState(prevState => ({
+            scrollPosition: prevState - 80
+          }))
         }
       })
     }
 
     //DOWN KEY
     else if (e.keyCode === 40 && activeItemCursor < tabs.length - 1) {
-      console.log("DOWN KEY PRESSED", e)
+      // console.log("DOWN KEY PRESSED", e)
 
       e.preventDefault()
       this.setState(prevState => ({
@@ -80,6 +91,9 @@ class Modal extends Component {
       }), () => {
         if (activeItemCursor > 2) {
           scrollContent.scrollBy(0, 80)
+          this.setState(prevState => ({
+            scrollPosition: prevState + 80
+          }))
         }
       })
     }
@@ -93,10 +107,19 @@ class Modal extends Component {
 
   render() {
     const { isOpen, tabs, activeMode, setModalState, commandBarFocused, activeItem } = this.props
-    const { activeItemCursor } = this.state
+    const { activeItemCursor, scrollPosition } = this.state
 
     if (isOpen) {
-      // document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden'
+
+      // setTimeout(() => {
+      //   const scrollContent = document.querySelector('kal-container').shadowRoot.querySelector('#kal-content')
+
+      //   scrollContent.scrollTo(0, this.state.scrollPosition)
+      //   console.log("SCROLL CONTENT", scrollContent)
+
+      // }, 100)
+
       // Save current focus
       // focusedElementBeforeModal = document.activeElement;
       // Listen for and trap the keyboard
@@ -120,6 +143,7 @@ class Modal extends Component {
       tabs: tabs,
       handleHover: this.handleItemHover,
       handleSelect: this.handleItemSelect,
+      setItemCursor: this.setItemCursor,
       commandBarFocused: commandBarFocused,
       activeMode: activeMode,
       activeItemCursor: activeItemCursor,
@@ -164,10 +188,11 @@ class Modal extends Component {
               leaveFrom='cl-opacity-100 cl-translate-y-0 sm:cl-scale-100'
               leaveTo='cl-opacity-0 cl-translate-y-4 sm:cl-translate-y-0 sm:cl-scale-95'
             >
-
-              <div id="kal-modal-panel" className="cl-font-sans cl-transition-all cl-transform cl-bg-primary cl-shadow-3xl cl-overflow-hidden cl-rounded-large cl-max-h-default cl-max-w-default cl-w-main" onKeyDown={(e) => this.handleKeyDown(e)}>
+              {/* <FocusTrapZone> */}
+              <div id="kal-modal-panel" className="cl-font-sans cl-font-medium cl-transition-all cl-transform cl-bg-primary cl-shadow-3xl cl-overflow-hidden cl-rounded-large cl-max-h-default cl-max-w-default cl-w-main" onKeyDown={(e) => this.handleKeyDown(e)}>
                 {activeMode === "HOME" && <HomePanel data={panelData} />}
               </div>
+              {/* </FocusTrapZone> */}
 
             </UITransition>
 
@@ -199,6 +224,12 @@ const mapDispatchToProps = (dispatch) => {
     updateActiveItem: (value) => {
       dispatch({
         type: 'ACTIVE_ITEM_SET',
+        payload: value
+      })
+    },
+    onSearchTermUpdate: (value) => {
+      dispatch({
+        type: 'SEARCH_TERM_UPDATED',
         payload: value
       })
     },

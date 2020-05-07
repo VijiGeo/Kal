@@ -6,23 +6,29 @@ class Searchbar extends Component {
   componentDidMount() {
 
     setTimeout(() => {
-      const commandLine = document.getElementById('kal-command')
+      const commandLine = document.querySelector('kal-container').shadowRoot.querySelector('#kal-command-input')
       commandLine.focus()
     }, 400)
   }
 
   render() {
-    const { searchTerm, onSearchTermUpdate, activeItem, panelState } = this.props
+    const { searchTerm, onSearchTermUpdate, activeItem, panelState, setItemCursor } = this.props
 
     const searchTermUpdate = (e) => {
       const value = e.target.value
+      console.log("VALUE", value, typeof (value))
       onSearchTermUpdate(value)
+      if (value == "") {
+        setItemCursor(1, 0)
+      } else {
+        setItemCursor(0, 0)
+      }
     }
 
     return (
       <div className="cl-border-b-1 cl-border-primary">
         <div className="cl-relative cl-px-lg cl-pb-md">
-          <input id="kal-command" value={searchTerm} onChange={(e) => searchTermUpdate(e)} className="cl-border-none cl-placeholder-primary cl-text-white cl-text-xl cl-block cl-w-full cl-h-xl cl-form-input cl-bg-transparent focus:cl-outline-none" placeholder={panelState.searchPlaceholder} />
+          <input id="kal-command-input" value={searchTerm} onChange={(e) => searchTermUpdate(e)} className="cl-border-none cl-placeholder-primary cl-text-white cl-text-xl cl-block cl-w-full cl-h-xl cl-form-input cl-bg-transparent focus:cl-outline-none" placeholder={panelState.searchPlaceholder} />
         </div>
       </div>
     )

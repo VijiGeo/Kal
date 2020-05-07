@@ -1,6 +1,6 @@
 {
   "name": "Kal Command Line",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "The missing command line for chrome",
   "manifest_version": 2,
   "browser_action": {
@@ -13,6 +13,7 @@
   "content_scripts": [
     {
       "js": [
+        "dist/polyfill.dist.js",
         "dist/content.dist.js"
       ],
       "css": [
@@ -25,7 +26,8 @@
     }
   ],
   "web_accessible_resources": [
-    "dist/tailwind.dist.css"
+    "dist/tailwind.dist.css",
+    "dist/content.dist.js"
   ],
   "permissions": [
     "tabs",
@@ -45,8 +47,7 @@
       "suggested_key": {
         "default": "Ctrl+E"
       },
-      "description": "Send a toggle-feature event to the extension",
-      "global": true
+      "description": "Send a toggle-feature event to the extension"
     }
   },
   "background": {

@@ -7,11 +7,23 @@ import {
   setAllTabsSucceeded,
   setRecentlyClosedSucceeded,
   setTopSitesSucceeded,
+  setCurrentTabSucceeded,
   setCurrentTabSessionSucceeded
 } from './actions/data';
 
 const store = createStore(rootReducer, {});
 wrapStore(store);
+
+const getCurrentTab = (command) => new Promise((resolve) => {
+  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
+    const currentTab = tabs[0]
+    store.dispatch(setCurrentTabSucceeded(currentTab))
+    chrome.tabs.sendMessage(currentTab.id, { command: command, currentTab: currentTab }, {}, function (response) {
+      // console.log("MODAL RESPONSE: ", response)
+    })
+    resolve(currentTab)
+  })
+})
 
 const getAllTabs = () => new Promise((resolve) => {
   chrome.tabs.query({
@@ -44,13 +56,7 @@ const getHistory = (past) => new Promise((resolve) => {
 
 const executeModalOpen = (command) => {
   getAllTabs()
-  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-    const currentTab = tabs[0]
-    chrome.tabs.sendMessage(currentTab.id, { command: command, currentTab: currentTab }, {}, function (response) {
-      // console.log("MODAL RESPONSE: ", response)
-    })
-  })
-
+  getCurrentTab(command)
 }
 
 chrome.browserAction.onClicked.addListener(function (tab) {
@@ -58,6 +64,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 });
 
 chrome.commands.onCommand.addListener(function (command) {
+  console.log("COMMAND EXECUTED", command)
   if (command === "toggle-feature") {
     executeModalOpen(command)
   }
@@ -78,21 +85,36 @@ chrome.runtime.onMessage.addListener(
 chrome.tabs.onCreated.addListener(function (tab) {
   // console.log("TAB CREATED", tab)
   getAllTabs()
-
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   // console.log("TAB UPDATED", tabId, changeInfo, tab)
+  const activeInfo = { tabId: tab.id, windowId: tab.windowId }
+  getAllTabs()
+  // store.dispatch(setCurrentTabSessionSucceeded(activeInfo))
+})
+
+chrome.tabs.onRemoved.addListener(function (tab) {
+  // console.log("TAB CREATED", tab)
+  getAllTabs()
+})
+
+chrome.tabs.onReplaced.addListener(function (tab) {
+  // console.log("TAB CREATED", tab)
   getAllTabs()
 })
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
-  console.log("ACTIVE TAB CHANGED", activeInfo)
+  // console.log("ACTIVE TAB CHANGED", activeInfo)
   // const currentTabSession = store.getState().data.currentTabSession.items
   // console.log("CURRENT SESSION", currentTabSession)
   store.dispatch(setCurrentTabSessionSucceeded(activeInfo))
-
 })
+
+// chrome.tabs.onHighlighted.addListener(function (highlightInfo) {
+//   // console.log("ACTIVE TAB CHANGED", activeInfo)
+//   store.dispatch(setCurrentTabSessionSucceeded(highlightInfo))
+// })
 
 
 getRecentlyClosed()

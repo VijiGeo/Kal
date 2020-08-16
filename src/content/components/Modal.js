@@ -17,7 +17,11 @@ class Modal extends Component {
   componentDidMount() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.command === "toggle-feature") {
-        this.setItemCursor(1, 400)
+        if (this.props.tabs.length > 1) {
+          this.setItemCursor(1, 0)
+        } else {
+          this.setItemCursor(0, 0)
+        }
         sendResponse({ data: request.currentTab.title })
       }
     })

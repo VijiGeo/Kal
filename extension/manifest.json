@@ -1,12 +1,14 @@
 {
-  "name": "Kal Command Line",
+  "name": "Kal",
   "version": "0.0.1",
   "description": "The missing command line for chrome",
   "manifest_version": 2,
   "browser_action": {
     "default_title": "Kal - Chrome Command Line",
     "default_icon": {
-      "16": "./dist/icons/icon-16.png"
+      "16": "./dist/icons/k-icon-16.png",
+      "48": "./dist/icons/k-icon-16.png",
+      "128": "./dist/icons/k-icon-16.png"
     }
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
@@ -33,10 +35,8 @@
     "tabs",
     "windows",
     "activeTab",
-    "storage",
     "bookmarks",
     "topSites",
-    "management",
     "sessions",
     "history",
     "<all_urls>"

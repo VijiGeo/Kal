@@ -25,8 +25,9 @@ class Tile extends Component {
             </div>
             <div className="cl-ml-md">
               <div className="cl-text-sm cl-font-medium cl-leading-lg cl-text-primary cl-truncate cl-break-normal cl-w-tile">{item.title}</div>
-              <div className="cl-text-sm cl-truncate cl-leading-lg cl-text-secondary cl-w-tile">{item.relevanceScore} --
-              {wwwReplacedUrl}
+              <div className="cl-text-sm cl-truncate cl-leading-lg cl-text-secondary cl-w-tile">
+                {/* {item.relevanceScore} -- */}
+                {wwwReplacedUrl}
               </div>
             </div>
           </div>

@@ -1,0 +1,15 @@
+types: ./types.graphql
+permissions:
+- operation: File.read
+- operation: File.create
+- operation: File.update
+- operation: File.delete
+- operation: User.create
+- operation: User.read
+- operation: User.update
+  fields:
+    - email
+    - position
+- operation: User.delete
+rootTokens:
+  - metalToken

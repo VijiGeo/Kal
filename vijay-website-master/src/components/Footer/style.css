@@ -1,0 +1,73 @@
+.footer {
+  background-color: #f7f9fe;
+  width: calc(100% - 50px);
+  padding-top: 20px;
+  padding-bottom: 50px;
+  padding-left: 50px;
+  font-family: "Avenir";
+  border-radius: 5px;
+  flex-direction: row;
+  display: flex;
+}
+
+.footerColumn {
+  flex-direction: column;
+  padding-right: 100px;
+}
+
+.footer h1 {
+  font-size: 25px;
+  line-height: 50px;
+  font-weight: 300;
+}
+
+.footer h2 {
+  color: #666;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 30px;
+}
+
+.footer h2:hover {
+  color: #276efa;
+}
+
+@media screen and (max-width: 700px) {
+  .footer {
+    padding-top: 20px;
+    padding-bottom: 50px;
+    flex-direction: column;
+  }
+  .footer h1 {
+    font-size: 22px;
+    line-height: 40px;
+    font-weight: 300;
+  }
+  .footer h2 {
+    color: #666;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 25px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .footer {
+    width: calc(100% - 25px);
+    padding-top: 20px;
+    padding-bottom: 50px;
+    padding-left: 25px;
+    flex-direction: column;
+  }
+  .footer h1 {
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 300;
+  }
+  .footer h2 {
+    color: #666;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 22px;
+  }
+}

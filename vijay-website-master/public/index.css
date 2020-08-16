@@ -1,0 +1,19 @@
+@font-face {
+  font-family: "Avenir";
+  src: url(fonts/avenir-next-regular.ttf);
+}
+
+@font-face {
+  font-family: "Avenir-Medium";
+  src: url(fonts/avenir-next-medium.ttf);
+}
+
+@font-face {
+  font-family: "Avenir-Demi";
+  src: url(fonts/avenir-next-demi.ttf);
+}
+
+@font-face {
+  font-family: "Avenir-Bold";
+  src: url(fonts/avenir-next-bold.ttf);
+}
